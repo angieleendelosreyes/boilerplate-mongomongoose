@@ -6,7 +6,16 @@ let Person;
 
 console.log('database uri>>>', typeof process.env.MONGO_URI, process.env.MONGO_URI);
 
-mongoose.connect('mongodb+srv://angieleen:AngieleenDB@cluster0.oian5.mongodb.net/Mydatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect(process.env.MONGO_URI, process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+try {
+  mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }, () =>
+    console.log("connected"));
+} catch (error) {
+  console.log("could not connect");
+}
 
 const createAndSavePerson = (done) => {
   done(null /*, data*/);
