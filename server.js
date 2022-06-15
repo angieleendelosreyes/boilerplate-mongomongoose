@@ -21,7 +21,7 @@ const enableCORS = function (req, res, next) {
     const allowedOrigins = ["https://www.freecodecamp.org"];
     const origin = req.headers.origin;
     if (!process.env.XORIGIN_RESTRICT || allowedOrigins.indexOf(origin) > -1) {
-      console.log(req.method);
+      console.log(req.method, req.path);
       res.set({
         "Access-Control-Allow-Origin": origin,
         "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -67,6 +67,7 @@ router.get("/is-mongoose-ok", function (req, res) {
 const Person = require("./myApp.js").PersonModel;
 
 router.use(function (req, res, next) {
+  console.log('router use checking the person model name', Person.modelName);
   if (req.method !== "OPTIONS" && Person.modelName !== "Person") {
     return next({ message: "Person Model is not correct" });
   }
@@ -76,8 +77,10 @@ router.use(function (req, res, next) {
 router.post("/mongoose-model", function (req, res, next) {
   // try to create a new instance based on their model
   // verify it's correctly defined in some way
+  console.log('req.body', req.body);
   let p;
   p = new Person(req.body);
+  console.log('p result json', p);
   res.json(p);
 });
 
@@ -92,6 +95,7 @@ router.get("/create-and-save-person", function (req, res, next) {
     if (err) {
       return next(err);
     }
+    console.log('data', data);
     if (!data) {
       console.log("Missing `done()` argument");
       return next({ message: "Missing callback argument" });
@@ -100,6 +104,7 @@ router.get("/create-and-save-person", function (req, res, next) {
       if (err) {
         return next(err);
       }
+      console.log('pers', pers);
       res.json(pers);
       pers.remove();
     });
